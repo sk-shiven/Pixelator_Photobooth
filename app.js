@@ -309,6 +309,7 @@ document.addEventListener('DOMContentLoaded', () => {
         reviewState.classList.remove('hidden');
         reviewState.classList.add('active');
 
+        stopCamera();
         isCapturing = false;
     }
 
@@ -323,6 +324,32 @@ document.addEventListener('DOMContentLoaded', () => {
 
     startBtn.addEventListener('click', async () => {
         if (isCapturing) return; // Prevent multiple clicks causing overlapped loops
+
+        const coin = document.getElementById('coin');
+        if (coin) {
+            coin.classList.remove('hidden');
+            coin.classList.add('drop');
+            
+            if (!audioCtx) audioCtx = new AudioContext();
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gainNode = audioCtx.createGain();
+            osc.type = 'square';
+            osc.frequency.setValueAtTime(987.77, audioCtx.currentTime); // B5
+            osc.frequency.setValueAtTime(1318.51, audioCtx.currentTime + 0.1); // E6
+            gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+            osc.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.3);
+
+            await sleep(800);
+            
+            coin.classList.remove('drop');
+            coin.classList.add('hidden');
+        }
 
         const hasCamera = await startCamera();
         if (!hasCamera) return;
@@ -360,10 +387,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // Download PNG
     downloadBtn.addEventListener('click', () => {
         if (!finalStripCanvas) return;
-        
+
         let msg = document.getElementById('custom-note').value.trim();
-        let filename = msg ? `${msg.replace(/[^a-z0-9]/gi, '_').toLowerCase()}_pixelator.png` : 'pixelator.png';
-        
+        let filename = msg ? `${msg.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.png` : 'image.png';
+
         const link = document.createElement('a');
         link.download = filename;
         link.href = finalStripCanvas.toDataURL('image/png');
