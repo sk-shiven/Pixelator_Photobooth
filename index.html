@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Pixelated Booth</title>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Theme Toggle -->
+    <div class="theme-toggle">
+        <button id="theme-btn">☀️ Light Mode</button>
+    </div>
+
+    <div class="container">
+        <!-- Landing State -->
+        <section id="landing-state" class="state active">
+            <h1 class="title">The Pixelated Booth</h1>
+            <p class="subtitle">Step in, pose, and get pixelated!</p>
+
+            <div class="input-group">
+                <label for="user-name">Enter your name:</label>
+                <input type="text" id="user-name" placeholder="PLAYER 1" autocomplete="off">
+            </div>
+
+            <button id="start-btn" class="arcade-btn">INSERT COIN (START)</button>
+        </section>
+
+        <!-- Active Booth State -->
+        <section id="booth-state" class="state hidden">
+            <div class="monitor-frame">
+                <video id="camera-feed" autoplay playsinline muted></video>
+                <div id="countdown-overlay" class="hidden">5</div>
+            </div>
+        </section>
+
+        <!-- Post-Capture State -->
+        <section id="review-state" class="state hidden">
+            <h2 class="title" style="font-size: 16px;">Your Retro Strip</h2>
+            <div class="strip-preview">
+                <!-- Final canvas will be shown here -->
+                <div class="strip-placeholder">PHOTO STRIP PREVIEW</div>
+            </div>
+
+            <div class="input-group">
+                <label for="custom-note">Add a custom note (optional):</label>
+                <input type="text" id="custom-note" placeholder="Awesome day!" autocomplete="off" maxlength="20">
+            </div>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <button id="download-btn" class="arcade-btn primary">DOWNLOAD</button>
+                <button id="retake-btn" class="arcade-btn secondary">RETAKE</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Screen Flash Overlay -->
+    <div id="flash-overlay" class="hidden"></div>
+
+    <script src="app.js"></script>
+</body>
+
+</html>
