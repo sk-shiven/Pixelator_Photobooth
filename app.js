@@ -299,7 +299,24 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        processedCaptures = rawCaptures.map(process8Bit);
+        const selectedStyle = document.querySelector('input[name="photo-style"]:checked')?.value || 'pixelated';
+        
+        if (selectedStyle === 'pixelated') {
+            processedCaptures = rawCaptures.map(process8Bit);
+        } else {
+            processedCaptures = rawCaptures.map(rawCanvas => {
+                const size = Math.min(rawCanvas.width, rawCanvas.height);
+                const startX = (rawCanvas.width - size) / 2;
+                const startY = (rawCanvas.height - size) / 2;
+                const finalCanvas = document.createElement('canvas');
+                finalCanvas.width = 384;
+                finalCanvas.height = 384;
+                const ctx = finalCanvas.getContext('2d');
+                ctx.drawImage(rawCanvas, startX, startY, size, size, 0, 0, 384, 384);
+                return finalCanvas;
+            });
+        }
+        
         finalStripCanvas = generatePhotoStrip(processedCaptures);
         updateStripPreview();
 
